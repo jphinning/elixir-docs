@@ -39,7 +39,7 @@ defmodule KV.Registry do
         {:noreply, state}
 
       false ->
-        {:ok, bucket_pid} = KV.Bucket.start_link([])
+        {:ok, bucket_pid} = DynamicSupervisor.start_child(KV.BucketSupervisor, KV.Bucket)
         ref = Process.monitor(bucket_pid)
         refs = refs |> Map.put_new(ref, new_name)
         buckets_map = buckets_map |> Map.put_new(new_name, bucket_pid)
